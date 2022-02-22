@@ -105,11 +105,27 @@ drawMonsters(G, settings, gameMemoryData, imageData, serverScale, scale, padding
                         }
                     }
                     
-                    if (!mob["isMerc"]) {
+                    if (!mob["isMerc"] and !mob["isNPC"]) {
                         Gdip_DrawEllipse(G, pPenNormal, mobx-(normalDotSize/2), moby-(normalDotSize/1.5), normalDotSize, normalDotSize/2)
                     } else if (settings["showMercs"]) {
                         Gdip_DrawEllipse(G, pPenMerc, mobx-(normalDotSize/2), moby-(normalDotSize/1.5), normalDotSize, normalDotSize/2)
                     }
+
+                      if (mob["isNPC"]) {
+                        npcFontsize:=11
+                        npcFontBGsize:=12
+                        textx := mobx-(normalDotSize/2) - 75
+                        texty := moby-(normalDotSize/2) - 100
+                        normalTextColor := normalMobColor
+                        Options = x%textx% y%texty% Center vBottom cffffffff r8 s%npcFontsize%
+                        textx := textx + 2
+                        texty := texty + 2
+                        Options2 = x%textx% y%texty% Center vBottom cff000000 r8 s%npcFontBGsize%
+                        Gdip_TextToGraphics(G, mob["name"], Options2, diabloFont, 160, 100)
+                        Gdip_TextToGraphics(G, mob["name"], Options, diabloFont, 160, 100)
+                        ;Gdip_DrawEllipse(G, pPenNormal, mobx-(normalDotSize/2), moby-(normalDotSize/2), normalDotSize, normalDotSize/2)   
+                        Gdip_DrawEllipse(G, pPenUnique, mobx-(normalDotSize/2), moby-(normalDotSize/2), normalDotSize, normalDotSize/2)   
+                        }
                 }
                 
             }
@@ -117,6 +133,8 @@ drawMonsters(G, settings, gameMemoryData, imageData, serverScale, scale, padding
     }
 
     ; having this in a separate loop forces it to be drawn on top
+    bossFontsize:=24
+    uniqFontsize:=12
     for index, mob in mobs
     {
         
@@ -132,10 +150,10 @@ drawMonsters(G, settings, gameMemoryData, imageData, serverScale, scale, padding
                     textx := mobx-(bossDotSize/2) - 75
                     texty := moby-(bossDotSize/2) - 100
                     bossTextColor := "ff" . settings["bossColor"] 
-                    Options = x%textx% y%texty% Center vBottom cffff0000 r8 s24
+                    Options = x%textx% y%texty% Center vBottom cffff0000 r8 s%bossFontsize%
                     textx := textx + 2
                     texty := texty + 2
-                    Options2 = x%textx% y%texty% Center vBottom cff000000 r8 s24
+                    Options2 = x%textx% y%texty% Center vBottom cff000000 r8 s%bossFontsize%
                     Gdip_TextToGraphics(G, mob["textTitle"], Options2, diabloFont, 160, 100)
                     Gdip_TextToGraphics(G, mob["textTitle"], Options, diabloFont, 160, 100)
                     Gdip_DrawEllipse(G, pPenBoss, mobx-(bossDotSize/2), moby-(bossDotSize/2), bossDotSize, bossDotSize/2)
@@ -180,6 +198,19 @@ drawMonsters(G, settings, gameMemoryData, imageData, serverScale, scale, padding
                             Gdip_DrawPie(G, pPenPoison, mobx-(uniqueImmunitySize/2), moby-(uniqueImmunitySize/2), uniqueImmunitySize, uniqueImmunitySize/2, angleDegrees, sliceSize)
                             angleDegrees := angleDegrees + sliceSize
                         }
+                    }
+                    if (!settings["ShowUniqMonNames"]){
+                        name:=mob["name"]
+                        textx := mobx-(uniqueDotSize/2) - 75
+                        texty := moby-(uniqueDotSize/2) - 100
+                        uniTextColor := "ff" . settings["uniqueMobColor"] 
+                        Options = x%textx% y%texty% Center vBottom c%uniTextColor% r8 s%uniqFontsize%
+                        textx := textx + 2
+                        texty := texty + 2
+                        Options2 = x%textx% y%texty% Center vBottom cff000000 r8 s%uniqFontsize%
+                        Gdip_TextToGraphics(G, name, Options2, diabloFont, 160, 100)
+                        Gdip_TextToGraphics(G, name, Options, diabloFont, 160, 100)
+                        Gdip_DrawEllipse(G, pPenUnique, mobx-(uniqueDotSize/2), moby-(uniqueDotSize/2), uniqueDotSize, uniqueDotSize/2)
                     }
                     Gdip_DrawEllipse(G, pPenUnique, mobx-(uniqueDotSize/2), moby-(uniqueDotSize/1.5), uniqueDotSize, uniqueDotSize/2)
                 }
